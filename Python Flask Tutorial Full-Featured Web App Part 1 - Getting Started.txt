@@ -1,0 +1,168 @@
+Python Flask Tutorial Full-Featured Web App Part 1 - Getting Started
+https://www.youtube.com/watch?v=MwZwr5Tvyxo
+
+How to setup Python for VSCode in 2023 in 5mins! | Install Python and Setup VSCode for Windows 10
+https://www.youtube.com/watch?v=cUAK4x_7thA
+Python-Flask-Wen-App
+
+Learn Visual Studio Code - Course for Beginners
+https://www.youtube.com/watch?v=yjeHLSrhPao
+
+https://www.youtube.com/watch?v=tG8PPne7ef0
+How To Use GitHub Copilot (with Python Examples)
+
+Create a project folder called "flask-web-blog" for this app on your Desktop.
+Open VSCode and navigate to the project folder using VSCode Explorer.
+
+To setup virtual environment for Python -> Ctrl+Shift+P
+Select "Python create environment"
+select "Venv"
+Select Python version
+This will create the .venv file for Python.
+To activate the virtual environment.
+Open the Terminal window in VSCode
+Note "bfvdi" is the name of my user folder path: "C:\Users\bfvdi" your "User" folder name will be different.
+PS C:\Users\bfvdi\Desktop\flask-web-blog>"cd .venv\Scripts"<Enter>
+PS C:\Users\bfvdi\Desktop\flask-web-blog\.venv\Scripts>".\activare"<Enter>
+(.venv) PS C:\Users\bfvdi\Desktop\flask-web-blog\.venv\Scripts>"cd .."<Enter>
+(.venv) PS C:\Users\bfvdi\Desktop\flask-web-blog\.venv>"cd.."<Enter>
+Note both versions of "cd .." and "cd.." do the same thing.
+Note "(.venv)" indicates that the Python environment has been activated.
+
+PS C:\Users\bfvdi\Desktop\flask-web-blog> pip list
+Package Version
+------- -------
+pip     24.3.1 
+PS C:\Users\bfvdi\Desktop\flask-web-blog> 
+pip install flask
+PS C:\Users\bfvdi\Desktop\flask-web-blog> pip list
+Package      Version
+------------ -------
+blinker      1.8.2
+click        8.1.7
+colorama     0.4.6
+Flask        3.0.3
+itsdangerous 2.2.0
+Jinja2       3.1.4
+MarkupSafe   3.0.2
+pip          24.3.1
+Werkzeug     3.1.1
+PS C:\Users\bfvdi\Desktop\flask-web-blog> 
+------
+create file flaskblog.py
+type in the code or copy and paste it into flaskblog.py
+----flaskblog.py---
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return "Hello World"
+-----Terminal----
+PS C:\Users\bfvdi\Desktop\flask-web-blog> "Set FLASK_APP=flaskblog.py"<enter>
+----LIve Server----
+In VSCOde install extension "Live Server" by Ritwick Dey
+Read section "DETAILS - Shortcuts to Start/Stop Server" take note of the location of "Go Live" in the VSCode status bar, bottom right hand side of VSCode window.
+------------------
+In VSCode click the "Run" (Run Python file) icon. 
+----Terminal----
+If code in flaskblog.py is error free, you shouldn't get any error reported in the Terminal.
+PS C:\Users\bfvdi\Desktop\flask-web-blog> & c:/Users/bfvdi/Desktop/flask-web-blog/.venv/Scripts/python.exe c:/Users/bfvdi/Desktop/flask-web-blog/flaskblog.py
+PS C:\Users\bfvdi\Desktop\flask-web-blog> 
+-----
+VSCOde Terminal: "Set FLASK_APP=flaskblog.py"<enter>
+
+Click the "Go Live" link.
+This will open your default web browser as "local host" IP address = "127.0.0.1"
+Appended to the local host IP address will be the (TCP/IP) port number.
+When the web browser opens, notice that "Go Live" message has changed to show "Port:5500"
+The web browser (URL) = "http://127.0.0.1:5500/"
+Flask app is serving the Python app output to "#app.route("/"} "http://127.0.0.1:5500/"
+In my case, "flaskblog.py" and "Python-Flask-Web-app.txt" file show.
+So the contents of folder c:/Users/bfvdi/Desktop/flask-web-blog/ are being served by flask.
+If you click on "flaskblog.py" the file will be downloaded. Open your "Downloads" folder and "flaskblog.py" will show. 
+If you click on "Python-Flask-Web-app.txt" the text file will be displayed in the browser.
+http://127.0.0.1:5500/Python-Flask-Wen-App.txt
+-----
+Open "Notepad" app in Windows -. Type "notepad" in Windows search box <enter>.
+Type some text and save the file in "c:/Users/bfvdi/Desktop/flask-web-blog/"
+Change URL to: -> http://127.0.0.1:5500/
+Note. Resize "VSCode" and "Live Server" windows (vertically) so you can view both at the same time.
+Note. "Hello world" message won't show in the web browser yet as we don't have a "HTML" file to diplay the "http://127.0.0.1:5500/" route yet in our "FLASK-WEB-BLOG" folder yet.
+---------
+https://youtu.be/MwZwr5Tvyxo?si=IPyJlTcEdf0MS5zX&t=664
+set FLASK_DEBUG=1"
+----Fix "Hello World"-----
+Using chatGPT4 free to query issues why "Hello World" wouldn't display in Live server web browser using VSCode.
+Read "Fix 'Hello World' not showing in VSCode Live server.txt"
+---------
+https://stackoverflow.com/questions/75759175/how-do-i-select-a-browser-to-use-for-vs-code-live-server
+Note Changing "live server" in VSCode settings to "Chrome" didn't fix the issue so I reset it back to "null"
+-------
+Lets skip this browser display issue with Live Server for now.
+-----
+add "<h1> and </h1> html tags to "Hello World"
+	return "Hello World"
+	return "<h1>Hello World</h1>"
+----Terminal----
+PS C:\Users\bfvdi\Desktop\flask-web-blog> & c:/Users/bfvdi/Desktop/flask-web-blog/.venv/Scripts/python.exe c:/Users/bfvdi/Desktop/flask-web-blog/flaskblog.py
+ * Serving Flask app 'flaskblog'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 161-274-456
+127.0.0.1 - - [03/Nov/2024 13:04:56] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [03/Nov/2024 13:04:56] "GET /favicon.ico HTTP/1.1" 404 -
+-----  
+"Hello World" now displays in larger text in Chrome.
+Note re "127.0.0.1 - - [03/Nov/2024 13:04:56] "GET /favicon.ico HTTP/1.1" 404 -"
+Read: "Re 'GET favicon.ico HTTP 1.1' 404 error.txt"
+Fix this html issue later.
+---
+Changing "Hello World" to "Home Page"
+In VSCode stop the server and restart the app. Refresh Chrome Browser and "Home Page" now displays.
+-----
+Add an "about" route to flaskblog.py
+If we try http://127.0.0.1:5000/about we will get a "404" error.
+---Liver server response----
+"Not Found
+The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again."
+---Terminal---
+Note this error prints everytime we refresh the web browser:
+"127.0.0.1 - - [03/Nov/2024 13:40:33] "GET /about HTTP/1.1" 404 -"
+127.0.0.1 - - [03/Nov/2024 13:40:33] "GET /about HTTP/1.1" 404 -
+127.0.0.1 - - [03/Nov/2024 13:41:48] "GET /about HTTP/1.1" 404 -
+127.0.0.1 - - [03/Nov/2024 13:41:50] "GET /about HTTP/1.1" 404 -
+--------
+Add a new route to flaskblog.py
+-----flaskblog.py-----
+from flask import Flask
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+app = Flask(__name__)
+
+@app.route("/")
+@app.route("/home")
+def home():
+	return "<h1>Home Page</h1>"
+
+@app.route("/about")
+def about():
+	return "<h1>About Page</h1>"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+-----
+Stop and then restart the server
+test three routes/URLs in Chrome browser:
+http://127.0.0.1:5000/
+http://127.0.0.1:5000/home
+http://127.0.0.1:5000/about
+all routes working okay in Chrome browser.
+-------

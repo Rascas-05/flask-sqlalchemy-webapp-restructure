@@ -1,0 +1,14 @@
+http://127.0.0.1:5000/register
+
+OperationalError
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)]
+[parameters: ('rascus', 'rascus@gmail.com', 'default.jpg', '$2b$12$FBVPa70s5sAIazX1si/90erjuWPyx/D1HiYUyPPGDSgMoervmu.a.')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Traceback (most recent call last)
+File "C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+Brought to you by DON'T PANIC, your friendly Werkzeug powered traceback interpreter.

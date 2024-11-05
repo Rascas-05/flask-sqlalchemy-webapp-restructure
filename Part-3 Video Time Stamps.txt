@@ -1,0 +1,32 @@
+Video time stamps and topic copied from a post by @1cannon3
+============================================================
+0:00 - Overview User Registration and user Login  
+1:04 - Install flask-wtf module which has pre-built form templates
+1:31 - Create new file forms.py
+2:03 - importing wtforms
+2:15 - HTML forms vs Python for forms
+2:34 - Registration form
+2:39 - Creating first RegistrationForm (This inherits from FlaskForm)
+2:48 - Having different form fields
+2:55 - Adding a username field
+3:00 - A username is a "StringField" (From wtforms)
+3:40 - Including limitations for usernames (or other fields)
+4:08 - Validators
+4:19 - Validators are arguments you pass into your fields
+4:25 - Passing a list of validators
+4:36 - "DataRequired" validator
+4:41 - "wtforms.validators"
+5:03 - "Length" validator
+5:51 - "Email" validator
+6:33 - "Password" field
+7:16 - Password confirmation
+7:27 - "EqualTo" validator for password confirmation
+8:00 - "EqualTo" arguments are the field you want this to be field to be equal to
+8:12 - Submit button
+8:20 - "Submit" field
+8:50 - Creating a login form
+9:35 - Adding a "remember" field, cookie, so browser remembers users
+10:20 - Setting a secret key for your application
+12:15 - Creating routes for registration and login forms
+12:22 - Registration route
+14:08 - Creating templates for registration & login form

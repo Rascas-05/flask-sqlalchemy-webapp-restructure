@@ -1,0 +1,403 @@
+Python Flask Tutorial - Full-Featured Web App Part 6 - User Authentication
+https://www.youtube.com/watch?v=CSHx6eCkmv0
+
+To protect the user database we need to encrpyt their passwords.
+C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\
+pip install flask-bcrypt
+---Terminal----
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----Pip List----- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+dnspython         2.7.0
+email_validator   2.2.0
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+idna              3.10
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+python-dotenv     1.0.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+----
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----------------- -------
+bcrypt            4.2.0
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+dnspython         2.7.0
+email_validator   2.2.0
+Flask             3.0.3
+Flask-Bcrypt      1.0.1
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+idna              3.10
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+python-dotenv     1.0.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+--------------
+Add password encryption
+---init.py----
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+app = Flask(__name__)
+
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+
+from flaskblog import routes
+-----------
+in routes.py add ->from flaskbog import app, db, bcrypt
+
+---routes.py---
+from flask import render_template, url_for, flash, redirect
+from flaskblog import app, db, bcrypt
+from flaskblog.forms import RegistrationForm, LoginForm
+from flaskblog.models import User, Post
+
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
+
+@app.route("/")
+@app.route("/home")
+def home():
+    return render_template('home.html', posts=Post)
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html', title='About')
+@app.route("/register", methods=['GET', 'POST'])
+
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('uft-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password) 
+        db.session.add(user)
+        db.session.commit()        
+        flash('Your account has been created! You are now able to login', 'success')
+    return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
+------------------
+http://127.0.0.1:5000/register
+
+OperationalError
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)]
+[parameters: ('rascus', 'rascus@gmail.com', 'default.jpg', '$2b$12$FBVPa70s5sAIazX1si/90erjuWPyx/D1HiYUyPPGDSgMoervmu.a.')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Traceback (most recent call last)
+File "C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+Brought to you by DON'T PANIC, your friendly Werkzeug powered traceback interpreter.
+-----------------
+site.db table structure is correct.
+
+-----------------
+table 'users' exists in site.db
+table 'users' has no row data.
+Checked using "DB Browser for SQLite"
+Issue: site.db table structure is incorrect.
+
+----
+create a file called "test_post_db.py"
+-----test_post_db.py----
+
+#try and add a new user to site db
+import sqlite3
+
+connection = sqlite3.connect('site.db')
+
+
+#with open('schema.sql') as f:
+#    connection.executescript(f.read())
+
+cur = connection.cursor()
+
+cur.execute("INSERT INTO post (title, content, date_posted, user_id) VALUES (?, ?, ?, ?)",
+            ('First Post', 'Content for the first post', 'April 20, 2018', 123)
+            )
+
+cur.execute("INSERT INTO post (title, content, date_posted, user_id) VALUES (?, ?, ?, ?)",
+            ('Second Post', 'Content for the second post', 'April 21, 2018',124)
+            )
+
+connection.commit()
+connection.close() 
+------------------
+2 posts added to 'post' table
+------------------
+create a file called "testdb.py"
+-----test_user_db.py----
+#try and add a new user to site db
+import sqlite3
+
+connection = sqlite3.connect('site.db')
+
+
+#with open('schema.sql') as f:
+    connection.executescript(f.read())
+
+cur = connection.cursor()
+
+cur.execute("INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)",
+            ('Joey', 'joey@hotmail.com', 'default.png', 'password')
+            )
+
+cur.execute("INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)",
+            ('Missy Higgins', 'missyhiggins@yahoo.com', 'default.png', 'mypassword')
+            )
+
+connection.commit()
+connection.close() 
+------------------
+two users Joey & Missy Higgins added to 'user' table.
+------------------
+Make change to routes.py->register
+-------
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, image_file='default.png', password=hashed_password) 
+        db.session.add(user)
+        db.session.commit()        
+        flash('Your account has been created! You are now able to login', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+-----
+Register new user 'karolina' using 'Regiser new user form'
+----
+OperationalError
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)]
+[parameters: ('karolina', 'protsenko@protonmail.com', 'default.png', '$2b$12$F0JSSWlrD598cJHJWa374en8tdJfEgoZdmbyS4n16AwiCpu2ebvm6')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+----
+Try adding new user using 'test_user_db.py'
+"[SQL: INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)]
+[parameters: ('karolina', 'protsenko@protonmail.com', 'default.png', '$2b$12$F0JSSWlrD598cJHJWa374en8tdJfEgoZdmbyS4n16AwiCpu2ebvm6')]"
+----
+import sqlite3
+
+connection = sqlite3.connect('site.db')
+
+
+#with open('schema.sql') as f:
+#    connection.executescript(f.read())
+
+cur = connection.cursor()
+
+# cur.execute("INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)",
+#             ('Joey', 'joey@hotmail.com', 'default.png', 'password')
+#             )
+
+# cur.execute("INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)",
+#             ('Missy Higgins', 'missyhiggins@yahoo.com', 'default.png', 'mypassword')
+#             )
+
+cur.execute("INSERT INTO user (username, email, image_file, password) VALUES (?, ?, ?, ?)",
+            ('karolina', 'protsenko@protonmail.com', 'default.png', '$2b$12$F0JSSWlrD598cJHJWa374en8tdJfEgoZdmbyS4n16AwiCpu2ebvm6')
+            )
+connection.commit()
+connection.close() 
+----
+New user 'karolina' added to user table.
+So the change I made to routes.py->register isn't the issue as I copied the SQL statement from the Chrome browser exception report and pasted that into test_user_db.py.
+----
+reading the browser exception report the wsgi module in SqlIte3 reports the first error.
+The above exception was the direct cause of the following exception:
+File "C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\.venv\Lib\site-packages\flask\app.py", line 1498, in __call__
+return self.wsgi_app(environ, start_response)"
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------
+when you start "run.py" in the Terminal, "app.run()" will execute because run.py = '__main__'
+flask "app.py" is invoked.
+--------------------
+query chatGPT4
+'flask exception return self.wsgi_app(environ, start_response)" "table user not found flask" "new user registartion"'
+----chatGPT4 response----
+It seems like you're encountering a few issues while working with Flask. Here's a breakdown of the problem you're describing:
+
+### 1. **Flask Exception Error:**
+   - The error message you're encountering, `"return self.wsgi_app(environ, start_response)"`, typically points to an issue with how Flask is interacting with the WSGI server. This often happens when an unhandled exception is raised during the request lifecycle, such as in the middleware or view function.
+   
+   **Solution:**
+   - Make sure you're catching and handling exceptions properly in your Flask application, especially around database queries and user input.
+   - Check the Flask logs for the full traceback to see where the error occurs.
+   - Ensure your Flask application is correctly initialized and configured.
+
+### 2. **Error: "table user not found":**
+   - This error likely comes from trying to query the `user` table in your database, but the table does not exist.
+   
+   **Solution:**
+   - If you're using SQLAlchemy, you should ensure that you've defined the `User` model and have run any necessary database migrations.
+   - If you haven't created the table yet, run a migration or create the table manually.
+
+   Example of how to check your models and migrations:
+
+   ```python
+   from yourapp import db
+
+   # Define your User model
+   class User(db.Model):
+       id = db.Column(db.Integer, primary_key=True)
+       username = db.Column(db.String(80), unique=True, nullable=False)
+       email = db.Column(db.String(120), unique=True, nullable=False)
+
+   # Check if the table exists or needs migration
+   db.create_all()  # This creates missing tables if needed.
+   ```
+
+   If you are using Flask-Migrate, you can run the migration commands like so:
+
+   ```bash
+   flask db init
+   flask db migrate
+   flask db upgrade
+   ```
+
+### 3. **New User Registration:**
+   - For a new user registration feature, ensure that you are capturing the form data, validating it, and saving it to the database.
+
+   **Example registration code:**
+
+   ```python
+   from flask import Flask, render_template, request, redirect, url_for
+   from yourapp import db
+   from yourapp.models import User
+
+   app = Flask(__name__)
+
+   @app.route('/register', methods=['GET', 'POST'])
+   def register():
+       if request.method == 'POST':
+           username = request.form['username']
+           email = request.form['email']
+           password = request.form['password']
+
+           # You can add validation and password hashing here
+           new_user = User(username=username, email=email, password=password)
+           
+           try:
+               db.session.add(new_user)
+               db.session.commit()
+               return redirect(url_for('login'))  # Or some other success page
+           except Exception as e:
+               db.session.rollback()
+               return str(e)  # You can replace this with a custom error message
+
+       return render_template('register.html')  # Render your registration form
+
+   if __name__ == "__main__":
+       app.run(debug=True)
+   ```
+
+### Final Checklist:
+1. Ensure your database schema matches your `User` model.
+2. Run the necessary migrations if you're using Flask-Migrate.
+3. Handle exceptions properly in the code to avoid unhandled errors during execution.
+4. Make sure you're properly managing user registration logic and database commits.
+
+Let me know if you'd like more specific guidance on any of these points!
+----
+===============
+Another observation:
+Home page doesn't show existing posts in the post table.
+Home page route and home.html are identical to the versions in Web-App part4-flaskblog.py
+So what's different?
+I decide to create a new folder (empty workspace) for part5 - restructure the database
+I copied site.db from "Web-App part4" into this new folder, reinstalled flask as well as other python and SQLAlchemy modules, etc.
+This may be the reason for the registration errors and why the posts don't show up in the home page.
+-----
+I will try a manual DB table migration in the termninal.
+pip install flask-migrate
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list 
+Package           Version
+----------------- -------
+alembic           1.14.0
+bcrypt            4.2.0
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+dnspython         2.7.0
+email_validator   2.2.0
+Flask             3.0.3
+Flask-Bcrypt      1.0.1
+Flask-Migrate     4.0.7
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+idna              3.10
+itsdangerous      2.2.0
+Jinja2            3.1.4
+Mako              1.3.6
+MarkupSafe        3.0.2
+pip               24.3.1
+python-dotenv     1.0.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+-------
+ 
+  
+
+I'm now thinking the new user registration form maybe the issue.
+ 
+

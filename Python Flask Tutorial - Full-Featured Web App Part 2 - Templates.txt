@@ -1,0 +1,298 @@
+Python Flask Tutorial - Full-Featured Web App Part 2 - Templates
+Corey Schafer May 5, 2018
+https://www.youtube.com/watch?v=QnDWIZuWYW0
+------
+In VSCode:
+Create a folder called "templates"
+Right click the "templates" folder and select "New file" and name it as "home.html"
+Right click the "templates" folder again and then select "New file" and name it as "about.html"
+-----
+Using Co-Pilot Extension for VSCode:
+In about.html - (editor panel)
+Shortcut "Ctrl+I" will open Copilot
+Type "create about.html<enter>
+Accept suggested code.
+----about.html----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>About Us</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Our Story</h2>
+            <p>Welcome to our blog! We are passionate about sharing our knowledge and experiences with the world.</p>
+        </section>
+        <section>
+            <h2>Our Mission</h2>
+            <p>Our mission is to provide valuable insights and information to our readers.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Your Blog Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+----------------
+Repeat procedure to create "home.html"
+---home.html----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Flask Web Blog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Flask Web Blog</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Recent Posts</h2>
+            <ul>
+                {% for post in posts %}
+                    <li>
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.content }}</p>
+                        <small>Posted by {{ post.author }} on {{ post.date_posted }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Flask Web Blog</p>
+    </footer>
+</body>
+</html> 
+--------------------
+Update routes to use the new templates:
+Select "flaskblog.py" and click in the editor window
+Ctrl+I -> Opens copilot.
+type "link html files to routes" 
+Click Accept suggested code.
+----
+copilot adds it code to the exist file content.
+Highlight the origional routes using mouse then "Ctrl+/" to block comment that section of code.
+Cut & paste '@app.route("/")' and add it back above "@app.route("/home")>
+---flaskblog.py---
+from flask import Flask
+from dotenv import load_dotenv
+import os
+from flask import render_template
+
+load_dotenv()
+
+app = Flask(__name__)
+
+@app.route("/")
+@app.route("/home")
+def home():
+	return render_template("home.html")
+
+@app.route("/about")
+def about():
+	return render_template("about.html")
+
+# @app.route("/home")
+# def home():
+# 	return "<h1>Home Page</h1>"
+
+# @app.route("/about")
+# def about():
+# 	return "<h1>About Page</h1>"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+------------------------
+Start flaskblog.py and test the routes in Chrome.
+Bingo!
+------
+Adding Dummy "post" data
+https://youtu.be/QnDWIZuWYW0?si=x1g4qspAQf49Io9L&t=361
+https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/02-Templates/flaskblog.py
+Follow the video to add some sample posts in flaskblog.py
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
+-----
+Follow the video to modify about.htmls and home.html to display the posts.
+https://youtu.be/QnDWIZuWYW0?si=ycigJB6jgZJEyqEf&t=443
+-----
+Follow the video -> bootstrap.com, Template inheritance, and Code snippets
+https://youtu.be/QnDWIZuWYW0?si=RcoBsZqSCHfYR4ON&t=1109
+https://getbootstrap.com/docs/5.3/getting-started/introduction/
+https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog/snippets
+-----
+Create a new folder named "static"
+Create a new file called main.css in the 'Static" folder.
+copy raw file and save it in main.css file
+https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/snippets/main.css
+----updated flaskblog.py----
+from flask import Flask, render_template, url_for
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+app = Flask(__name__)
+
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
+
+@app.route("/")
+@app.route("/home")
+def home():
+    return render_template('home.html', posts=posts)
+    #return render_template("home.html")
+
+@app.route("/about")
+def about():
+	return render_template("about.html")
+
+# @app.route("/home")
+# def home():
+# 	return "<h1>Home Page</h1>"
+
+# @app.route("/about")
+# def about():
+# 	return "<h1>About Page</h1>"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+-------------------------
+https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/02-Templates/templates/about.html
+----update about.html----
+{% extends "layout.html" %}
+{% block content %}
+    <h1>About Page</h1>
+{% endblock content %}
+------------------------
+https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/02-Templates/templates/home.html
+----update home.html----
+{% extends "layout.html" %}
+{% block content %}
+    {% for post in posts %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
+--------------------------
+Create a new file named "layout.html in the templates folder
+and paste in the following code.
+-----layout.html----
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    {% if title %}
+        <title>Flask Blog - {{ title }}</title>
+    {% else %}
+        <title>Flask Blog</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">Flask Blog</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="/">Home</a>
+              <a class="nav-item nav-link" href="/about">About</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" href="/login">Login</a>
+              <a class="nav-item nav-link" href="/register">Register</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+          {% block content %}{% endblock %}
+        </div>
+        <div class="col-md-4">
+          <div class="content-section">
+            <h3>Our Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
+-------------
+Home and About links in the Navigation bar should work.
+Home page displaye the two dummy blog posts.
+About page doesn't show any blog posts.
+=============
+End of Part 2

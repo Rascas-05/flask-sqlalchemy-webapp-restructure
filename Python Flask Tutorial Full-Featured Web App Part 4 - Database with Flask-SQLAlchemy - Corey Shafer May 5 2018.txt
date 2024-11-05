@@ -1,0 +1,62 @@
+Python Flask Tutorial: Full-Featured Web App Part 4 - Database with Flask-SQLAlchemy - Corey Shafer May 5 2018 
+https://www.youtube.com/watch?v=cYWiDiIUxQc
+
+https://github.com/CoreyMSchafer/code_snippets/tree/master/Python/Flask_Blog
+
+VSCode - Windows 10 Home
+
+https://github.com/Rascas-05/flask-sqlalchemy-webapp.git
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> 
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> pip list
+Package Version
+------- -------
+pip     24.3.1
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> 
+
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> python --version
+Python 3.12.4
+
+Terminal ->pip install flask-sqlalchemy
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+greenlet          3.1.1
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp>
+
+https://github.com/CoreyMSchafer/code_snippets/blob/master/Python/Flask_Blog/04-Database/
+Create all files and folders
+download raw site.db
+
+pip install flask-wtf
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp>
+

@@ -1,0 +1,112 @@
+Setting up Alembic with SQLAlchemy - microapis jan 3, 2022
+https://www.youtube.com/watch?v=nt5sSr1A_qw
+
+SQLAlchemy "ORM" (Object Relational Mapper) is middleware which provides an abstraction layer between writing SQL code statements and different SQL database engines. If you decide to change your database engine, you don't have to rewrite your code.
+You define a separate class model in your python code for each table in the database. You define the columns in each table by defining class objects in each table model. Class objects are given properties and methods which provide a means to store and retrieve data from a specified database. The class models define the database schema.
+
+Why use Alembic with SQLAlchemy?
+Django has it's own ORM and database model schema and migration tools. SQLAlchemy has an ORM module but no database model migration capability. Alembic provides migration tools for SQLAlchemy, to update changes in the database schema.
+SQLAlchemy is compatible with different database engines (SQLite3, MySQL, Postgres, etc) which have different database schemas and different SQL statement syntax.
+-----
+pip install alembic sqlalchemy
+pip list
+alembic init migrations
+Note alembic.ini and migrations folder is created.
+edit alembic.ini to point to the database file.
+Ex. sqlalchemy.url = sqlite:///models.db
+in migrations\.env
+edit the following lines:
+# from myapp import mymodel -> frommodels import Base
+# target_metadata = mymodel.Base.metadata ->target_metadata = Base.metadata 
+-----
+in models.py
+Base = declarative_base()
+
+class UserModel(Base):
+	__tablename__ = "user"
+	id = Column(Integer, primary_key=True)
+	first_name = Column(String, nullable=False)
+	last_name = Column(String,  nullable=False)
+	birth = Column(DateTime)
+	created = Column(DateTime, default=datetime.utcnow)
+-----Terminal----
+> alembic revision --autogenerate -m "Create user model"
+----
+apply the migrations
+> alembic upgrade heads
+> ls (Prints)
+Pipfile      alembic.ini models.db
+Pipfile.lock migrations models.py
+-----
+#Now we are ready to interact with the database
+with session_maker() as session:
+	user_records = session.query(UserModel).all()
+	for user in user_records:
+		print(user)
+# create some users:
+user = [
+	UserModel(first_name="Bob", last_name="Marly", birth=datetime(1980,6,9)),
+	UserModel(first_name="Mary", last_name="Hanson", birth=datetime(1974,2,11))
+]
+
+#Connect to the database abd create a session
+
+session_maker = sessionmaker(bind=create_engine('sqlite://models.db'))
+
+def create_users():
+	with session_maker() as session:
+		for user in user:
+			session.add.add(user)
+		session.commit
+
+with session_maker() as session:
+	user_records = session.query(UserModel).all()
+	for user in user_records:
+		print(user)
+----Terminal----
+#run the app and the new users will be created and displayed.
+
+----models.py
+Base = declarative_base()
+
+class UserModel(Base):
+	__tablename__ = "user"
+	id = Column(Integer, primary_key=True)
+	first_name = Column(String, nullable=False)
+	last_name = Column(String,  nullable=False)
+	birth = Column(DateTime)
+	created = Column(DateTime, default=datetime.utcnow)
+
+	@property
+	def full_name(self):
+		returm f'{self.first_Name} {self.last_name}'
+	def __repr__(self):
+		return (
+			f'UserModel)id={self.id), first_name={self.first_name},'
+			f'last_name={self.last_name}, birth={self.birth},'
+			f'created={self.created}'
+		)
+
+# create some users:
+user = [
+	UserModel(first_name="Bob", last_name="Marly", birth=datetime(1980,6,9)),
+	UserModel(first_name="Mary", last_name="Hanson", birth=datetime(1974,2,11))
+]
+
+#Connect to the database abd create a session
+
+session_maker = sessionmaker(bind=create_engine('sqlite://models.db'))
+
+def create_users():
+	with session_maker() as session:
+		for user in user:
+			session.add.add(user)
+		session.commit
+
+with session_maker() as session:
+	user_records = session.query(UserModel).all()
+	for user in user_records:
+		print(user.fullname)
+--------------------------------
+
+

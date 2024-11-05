@@ -1,0 +1,174 @@
+Python Flask Tutorial Full-Featured Web App Part 5 - Package Structure
+https://www.youtube.com/watch?v=44PvX0Yv368&t=364s
+D:\Flask\SQLAlchemy\Corey Schafer
+
+https://github.com/Rascas-05/flask-sqlalchemy-webapp-restructure.git
+
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> 
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> python --version
+Python 3.12.4
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> 
+pip     24.3.1 
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> 
+
+Create folders & Files as per Folder & File tree.png
+Copy template files to Templates folder
+Copy main.css to static folder
+
+copy routes to routes.py
+
+copy classes to models.py
+
+copy forms.py to forms.py
+
+pip install flask-sqlalchemy
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+greenlet          3.1.1
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+(.venv) PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+
+----app.py---
+from flaskblog import app
+
+if __name__ == '__main__':
+	app.run(debug=True)
+
+---------
+resume video https://youtu.be/44PvX0Yv368?si=sh3oNVaj10dcpW2t&t=777
+----
+copy site.db from C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp
+----
+ImportError: cannot import name 'login_manager' from partially initialized module 'flaskblog' (most likely due to a circular import) (c:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\flaskblog\__init__.py)
+Removing "login_manager" from models.py got rid of circular reference.
+Adding "login_manager" was suggested by Co-Pilot/PyCharm
+----routes.py----
+
+added:
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
+------
+Web Page now loads, errors in Terminal:
+  File "c:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\flaskblog\templates\layout.html", line 53, in top-level template code
+    {% block content %}{% endblock %}
+  File "c:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\flaskblog\templates\home.html", line 3, in block 
+'content'
+    {% for post in posts %}
+TypeError: 'DefaultMeta' object is not iterable
+127.0.0.1 - - [02/Nov/2024 18:20:56] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 304 -
+127.0.0.1 - - [02/Nov/2024 18:20:56] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 304 -
+127.0.0.1 - - [02/Nov/2024 18:20:56] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=JdJAx6kQaqxkDcyzM64Z HTTP/1.1" 200 -
+127.0.0.1 - - [02/Nov/2024 18:20:56] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 304 -
+---home.html---
+fix line 3:
+    {% for post in posts %}
+    {% for post in Posts %}
+
+if __name__ == '__main__':
+    app.run(debug=True)
+------------
+------
+Register new user:
+File "C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure\.venv\Lib\site-packages\wtforms\validators.py", line 403, in __call__
+raise Exception(
+^^^^^^^^^^
+Exception: Install 'email_validator' for email validation support.
+-----
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+python-dotenv     1.0.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+-----
+pip install email-validator
+----
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure> pip list
+Package           Version
+----------------- -------
+blinker           1.8.2
+click             8.1.7
+colorama          0.4.6
+dnspython         2.7.0
+email_validator   2.2.0
+Flask             3.0.3
+Flask-SQLAlchemy  3.1.1
+Flask-WTF         1.2.2
+greenlet          3.1.1
+idna              3.10
+itsdangerous      2.2.0
+Jinja2            3.1.4
+MarkupSafe        3.0.2
+pip               24.3.1
+python-dotenv     1.0.1
+SQLAlchemy        2.0.36
+typing_extensions 4.12.2
+Werkzeug          3.1.0
+WTForms           3.2.1
+PS C:\Users\bfvdi\Documents\AppDevelopment\VSCODE\Projects\Flask\sqlalchemy\corey_schafer\flask-sqlalchemy-webapp-restructure>
+-----------
+Register new user "Rascus" worked - "Account created for rascus"
+test user login:
+Login page->Type in email-> get red warning message: "Invalid email address"
+re registered as "Rascus" registration accepted.
+Login Unsuccessful. Please check username and password
+Open "site.db" using "DB Browser for SQLite" and Browse Users table
+No Users in site.db database.
+---end of part 5----
